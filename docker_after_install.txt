@@ -1,0 +1,74 @@
+
+Thing		Where to use
+===============================
+
+FROM,RUN,COPY	Dockerfile only
+docker build	Terminal
+dir		Windows
+ls		Linux
+
+
+
+
+docker run --rm playwright-tests
+---------------------------------
+
+Run a temporary container from "playwright-tests",
+execute whatever is inside it,
+then automatically delete it.
+
+
+Docker image (playwright-tests)
+        ↓
+Creates container
+        ↓
+Runs CMD inside Dockerfile
+        ↓
+npx playwright test runs
+        ↓
+Shows output
+        ↓
+Container deleted (--rm)
+
+
+Your Dockerfile has:
+
+CMD ["npx", "playwright", "test"]
+
+So this command:
+docker run --rm playwright-tests
+
+👉 Actually means:
+Run Playwright tests inside Docker and clean up
+
+
+
+
+⚠️ Without --rm
+docker run playwright-tests
+
+👉 Then:
+
+Containers pile up 😵
+You must clean manually:
+docker ps -a
+docker rm <container-id>
+🚀 Pro Tip
+
+For debugging:
+
+docker run -it playwright-tests bash
+
+
+
+🚀 Correct Workflow (remember this)
+1️⃣ Build image
+docker build -t playwright-tests .
+2️⃣ Run container
+docker run --rm playwright-tests
+
+
+🎯 Quick mental model
+Command	Purpose
+docker build	create image
+docker run	run container
